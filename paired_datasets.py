@@ -32,7 +32,7 @@ class PairDataset(Dataset):
         self.transform = transform
 
     def __getitem__(self, idx):
-        img, target = self.data[idx], self.targets[idx]
+        img, target = self.dataset.data[idx], self.dataset.targets[idx]
         img = Image.fromarray(img).convert('RGB')
         imgs = [self.transform(img), self.transform(img)]
         return torch.stack(imgs), target  # stack a positive pair
@@ -97,7 +97,7 @@ class AugPairDataset(Dataset):
         return mixed
 
     def __getitem__(self, i):
-        img, target = self.data[i], self.targets[i]
+        img, target = self.dataset.data[i], self.dataset.targets[i]
         img = Image.fromarray(img).convert('RGB')
         img = self.transform(img)  # PIL image
         x_clean = self.to_tensor(img)
