@@ -64,12 +64,13 @@ class AugPairDataset(Dataset):
         """
         assert dataset in ['cifar10', 'cifar100']
         if dataset == 'cifar10':
-            self.dataset = CIFAR10(root=root, transform=transform, download=download)
+            self.dataset = CIFAR10(root=root, transform=None, download=download)
         elif dataset == 'cifar100':
-            self.dataset = CIFAR100(root=root, transform=transform, download=download)
+            self.dataset = CIFAR100(root=root, transform=None, download=download)
         else:
             raise Exception('dataset {} not available, should be one of [cifar10, cifar100]'.format(dataset))
 
+        self.transform = transform
         self.aug_list = aug_list
         self.width = width
         self.depth = depth
@@ -96,10 +97,12 @@ class AugPairDataset(Dataset):
         return mixed
 
     def __getitem__(self, i):
-        x, y = self.dataset[i]  # i-th entry
-        x_clean = self.to_tensor(x)
-        x_aug = self.to_tensor(self._aug(x))
-        return torch.stack([x_clean, x_aug]), y
+        img, target = self.data[i], self.targets[i]
+        img = Image.fromarray(img).convert('RGB')
+        img = self.transform(img)  # PIL image
+        x_clean = self.to_tensor(img)
+        x_aug = self.to_tensor(self._aug(img))
+        return torch.stack([x_clean, x_aug]), target
 
     def __len__(self):
         return len(self.dataset)
