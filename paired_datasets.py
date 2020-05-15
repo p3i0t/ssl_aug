@@ -100,3 +100,6 @@ class AugPairDataset(Dataset):
         x_clean = self.to_tensor(x)
         x_aug = self.to_tensor(self._aug(x))
         return torch.stack([x_clean, x_aug]), y
+
+    def __len__(self):
+        return len(self.dataset)
