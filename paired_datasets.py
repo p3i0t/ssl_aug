@@ -101,7 +101,7 @@ class AugPairDataset(Dataset):
         img = Image.fromarray(img).convert('RGB')
         img = self.transform(img)  # PIL image
         x_clean = self.to_tensor(img)
-        x_aug = self.to_tensor(self._aug(img))
+        x_aug = self._aug(img)
         return torch.stack([x_clean, x_aug]), target
 
     def __len__(self):
