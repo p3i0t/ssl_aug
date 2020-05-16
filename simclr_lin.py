@@ -89,7 +89,8 @@ def finetune(args: DictConfig) -> None:
     # Prepare model
     base_encoder = eval(args.backbone)
     pre_model = SimCLR(base_encoder, projection_dim=args.projection_dim).cuda()
-    pre_model.load_state_dict(torch.load('simclr_{}_epoch{}.pt'.format(args.backbone, args.load_epoch)))
+    state_dict = torch.load('simclr_{}_epoch{}{}.pt'.format(args.backbone, args.load_epoch, '_aug' if args.aug else ''))
+    pre_model.load_state_dict(state_dict)
     model = LinModel(pre_model.enc, feature_dim=pre_model.feature_dim, n_classes=len(train_set.targets))
     model = model.cuda()
 
