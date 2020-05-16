@@ -12,6 +12,7 @@ hydra:
 
 dataset: cifar10
 data_dir: data
+eval: False  # if True, eval with the finetuned linear classifier.
 
 # model
 backbone: resnet18 # or resnet34, resnet50
